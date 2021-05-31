@@ -33,10 +33,10 @@ router.post('/', async (req, res) => {
     await user.save();
  
     //Return user 
-    const payload = _.pick(user, ['_id', 'userName', 'ou', 'division'])
+    const payload = _.pick(user, ['_id', 'userName', 'ou', 'division', 'role'])
     const token = jwt.sign(payload, jwtPrivateKey);
     //res.json(payload);
-    res.json({token: token});
+    res.header('x-auth-token', token).json(payload);
 })
 
 
