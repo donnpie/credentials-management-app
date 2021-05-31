@@ -25,3 +25,5 @@ This app is built using the MERN stack. There is a single Mongo database that st
 
 ## Creating new users
 When creating a new user, the role is automatically set to *Normal*. If a different role is required, then it must be updated by a user with sufficient permissions after it is first created.
+
+User passwords are stored in encrypted form using the bcrypt npm package.
