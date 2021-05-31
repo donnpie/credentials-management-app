@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const db = require('./config/secrets').mongoUri;
 const helmet = require('helmet');
 const morgan = require('morgan');
-
+const userRouter = require('./routes/users');
 
 const app = express();
 
@@ -16,6 +16,10 @@ mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true  })
 app.use(express.json()); //body parser 
 app.use(helmet()); 
 app.use(morgan('tiny')); 
+
+//Use routes
+app.use('/api/users', userRouter);
+
 
 //Listen
 const port = process.env.PORT || 5000;

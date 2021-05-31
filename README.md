@@ -20,4 +20,8 @@ Most employees are only part of one OU and one division with it, but there are s
 - **Admin** users can do the above plus they can assign and unassign users from divisions and OUs. They can also change the user role of any user.
 
 # Software design
+## General
 This app is built using the MERN stack. There is a single Mongo database that stores credentials for all users, however, credentials for a given division are only accessible for users registered to that division.
+
+## Creating new users
+When creating a new user, the role is automatically set to *Normal*. If a different role is required, then it must be updated by a user with sufficient permissions after it is first created.

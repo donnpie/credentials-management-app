@@ -48,13 +48,13 @@ exports.User = User;
 
 //Frontend validation
 function validateUser(user) {
-    const schema = {
+    const schema = Joi.object({
       name: Joi.string().min(3).max(50).required(),
       password: Joi.string().min(3).max(50).required(),
       ou: Joi.string().min(3).max(50).required(),
-      division: Joi.string().min(3).max(50).required(),
-    };
-    return Joi.validate(user, schema);
+      division: Joi.string().min(2).max(50).required(),
+    });
+    return schema.validate(user);
 }
 
 exports.validate = validateUser;
