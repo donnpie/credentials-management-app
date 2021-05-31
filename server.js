@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const db = require('./config/secrets').mongoUri;
+const helmet = require('helmet');
+const morgan = require('morgan');
 
 
 const app = express();
@@ -11,6 +13,9 @@ mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true  })
 .catch(err => console.log(err));
 
 //Middleware
+app.use(express.json()); //body parser 
+app.use(helmet()); 
+app.use(morgan('tiny')); 
 
 //Listen
 const port = process.env.PORT || 5000;
