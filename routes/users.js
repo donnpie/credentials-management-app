@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const {User, validate} = require('../models/User');
 const bcrypt = require('bcrypt');
+const _ = require('lodash');
+const jwt = require('jsonwebtoken');
+const jwtPrivateKey = require('../config/secrets').jwtPrivateKey
 
 router.get('/', (req, res) => {
     res.send('Hello');
@@ -30,7 +33,10 @@ router.post('/', async (req, res) => {
     await user.save();
  
     //Return user 
-    res.json({user: user});
+    const payload = _.pick(user, ['_id', 'userName', 'ou', 'division'])
+    const token = jwt.sign(payload, jwtPrivateKey);
+    //res.json(payload);
+    res.json({token: token});
 })
 
 
