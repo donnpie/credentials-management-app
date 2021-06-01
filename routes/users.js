@@ -116,8 +116,6 @@ router.put('/', async (req, res) => {
                     validateSingleItem(req.body.newName, 400, "Please specify new username", res);
 
                     //update username
-                    // let user = await User.findOneAndUpdate({userName: req.body.oldName}, {userName: req.body.newName}, {new: true});
-                    // if (!user) return res.status(404).send("The user with the given username was not found");
                     let user = await findAndUpdate({userName: req.body.oldName}, {userName: req.body.newName}, res);
                     
                     returnToClient(user, res);
@@ -131,8 +129,6 @@ router.put('/', async (req, res) => {
                     const password = await encryptPassword(req.body.newPassword)
                     
                     //Update user
-                    // let user = await User.findOneAndUpdate({userName: req.body.name}, {password: password}, {new: true});
-                    // if (!user) return res.status(404).send("The user with the given username was not found");
                     let user = await findAndUpdate({userName: req.body.name}, {password: password}, res);
                     
                     returnToClient(user, res);
@@ -146,8 +142,6 @@ router.put('/', async (req, res) => {
                     validateSingleItem(req.body.newOu, 400, "Please specify new OU", res);
                     
                     //update ou
-                    // let user = await User.findOneAndUpdate({userName: req.body.name}, {ou: req.body.newOu}, {new: true});
-                    // if (!user) return res.status(404).send("The user with the given username was not found");
                     let user = await findAndUpdate({userName: req.body.name}, {ou: req.body.newOu}, res);
                     
                     returnToClient(user, res);
@@ -159,8 +153,6 @@ router.put('/', async (req, res) => {
                     validateSingleItem(req.body.newDivision, 400, "Please specify new Division", res);
                     
                     //update division
-                    // let user = await User.findOneAndUpdate({userName: req.body.name}, {division: req.body.newDivision}, {new: true});
-                    // if (!user) return res.status(404).send("The user with the given username was not found");
                     let user = await findAndUpdate({userName: req.body.name}, {division: req.body.newDivision}, res);
                     
                     returnToClient(user, res);
@@ -171,20 +163,17 @@ router.put('/', async (req, res) => {
                     validateSingleItem(req.body.newRole, 400, "Please specify new Role", res);
 
                     //update role
-                    // let user = await User.findOneAndUpdate({userName: req.body.name}, {role: req.body.newRole}, {new: true});
-                    // if (!user) return res.status(404).send("The user with the given username was not found");
                     let user = await findAndUpdate({userName: req.body.name}, {role: req.body.newRole}, res);
                     
                     returnToClient(user, res);
                 }
             } else return res.status(400).json({Error: "Value for field to be updated is invalid"})
         }
-        //Extract and validate body (contains data for user to be updated)
     }
-    catch (err) 
-    {}
+    catch (err) {
+        res.status(401).json({Error: "The given token is not valid"});
+    }
 });
-
 
 module.exports = router;
 
@@ -194,16 +183,18 @@ function returnToClient(user, res) {
     res.json(newUser);
 }
 
-
+//Validate a single item in the request body
 function validateSingleItem(item, errorCode, message, res) {
     if (!item) return  res.status(errorCode).json({Error: message});
 }
 
+//Encrypt the password
 async function encryptPassword(plainTextPassword) {
     const salt = await bcrypt.genSalt(10);
     return await bcrypt.hash(plainTextPassword, salt);
 }
 
+//Find document and update or send back 404 if not found
 async function findAndUpdate(searchObj, changeObj, res) {
     let user = await User.findOneAndUpdate(searchObj, changeObj, {new: true});
     if (!user) return res.status(404).send("The user with the given username was not found");
