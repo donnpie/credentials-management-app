@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
         const users = await User.find({ou, division});
         res.json(users);
     }catch (err) {
-        res.status(401).json({Error: "The given token is not valid"})
+        res.status(401).json({Error: "The given token is not valid"});
     }
 });
 
@@ -36,7 +36,7 @@ router.get('/:id', async (req, res) => {
             res.status(403).json({Error: "User not authorised"});
         }
     }catch (err) {
-        res.status(401).json({Error: "The given token is not valid"})
+        res.status(401).json({Error: "The given token is not valid"});
     }
 });
 
@@ -58,11 +58,11 @@ router.post('/', async (req, res) => {
 
         //Check if request is valid
         const {error} = validate(req.body);
-        if (error) return res.status(400).json(error.details[0].message)
+        if (error) return res.status(400).json(error.details[0].message);
         
         //check if user exists
         let user = await User.findOne({userName: req.body.name});
-        if (user) return res.status(400).json({Error: "This username is taken"})
+        if (user) return res.status(400).json({Error: "This username is taken"});
         
         //Add user
         user = new User({
@@ -76,10 +76,10 @@ router.post('/', async (req, res) => {
         await user.save();
      
         //Return user 
-        payload = _.pick(user, ['_id', 'userName', 'ou', 'division', 'role'])
+        payload = _.pick(user, ['_id', 'userName', 'ou', 'division', 'role']);
         res.json(payload);
     } catch (err) {
-        res.status(401).json({Error: "The given token is not valid"})
+        res.status(401).json({Error: "The given token is not valid"});
     }
 })
 
@@ -113,9 +113,9 @@ router.put('/', async (req, res) => {
                 if (fieldToBeUpdated === "userName") {
                     //Check body is valid
                     const oldName = req.body.oldName;
-                    if (!oldName) return  res.status(400).json({Error: "Please specify old username"})
+                    if (!oldName) return  res.status(400).json({Error: "Please specify old username"});
                     const newName = req.body.newName;
-                    if (!newName) return  res.status(400).json({Error: "Please specify new username"})
+                    if (!newName) return  res.status(400).json({Error: "Please specify new username"});
 
                     //update username
                     const user = await User.findOneAndUpdate({userName: oldName}, {userName: newName}, {new: true});
@@ -134,17 +134,63 @@ router.put('/', async (req, res) => {
                     //update password
                     const salt = await bcrypt.genSalt(10);
                     const password = await bcrypt.hash(newPassword, salt);
-                    // console.log(password);
-                    const user = await User.findOneAndUpdate({userName: name}, {password: password}, {new: true});
-                    console.log("Made it this far");
+                    let user = await User.findOneAndUpdate({userName: name}, {password: password}, {new: true});
                     if (!user) return res.status(404).send("The user with the given username was not found");
                     
                     //Return to client
+                    user = _.pick(user, ['_id', 'userName', 'ou', 'division', 'role']);
                     res.json(user);
                 }
             }
             else if (fieldToBeUpdated === "ou" || fieldToBeUpdated === "division" || fieldToBeUpdated === "role") {
                 if (role !== "Admin") return res.status(403).json({Error: "Requires Admin role to change this field"})
+                if (fieldToBeUpdated === "ou") {
+                    //Check body is valid
+                    const name = req.body.name;
+                    if (!name) return  res.status(400).json({Error: "Please specify username"});
+                    const oldOu = req.body.ou;
+                    if (!oldOu) return  res.status(400).json({Error: "Please specify old OU"})
+                    const newOu = req.body.newOu;
+                    if (!newOu) return  res.status(400).json({Error: "Please specify new OU"})
+                    
+                    //update ou
+                    const user = await User.findOneAndUpdate({userName: name}, {ou: newOu}, {new: true});
+                    if (!user) return res.status(404).send("The user with the given username was not found");
+                    
+                    //Return to client
+                    res.json(user);
+                }
+                if (fieldToBeUpdated === "division") {
+                    //Check body is valid
+                    const name = req.body.name;
+                    if (!name) return  res.status(400).json({Error: "Please specify username"});
+                    const oldDivision = req.body.division;
+                    if (!oldDivision) return  res.status(400).json({Error: "Please specify old Division"})
+                    const newDivision = req.body.newDivision;
+                    if (!newDivision) return  res.status(400).json({Error: "Please specify new Division"})
+                    
+                    //update division
+                    const user = await User.findOneAndUpdate({userName: name}, {division: newDivision}, {new: true});
+                    if (!user) return res.status(404).send("The user with the given username was not found");
+                    
+                    //Return to client
+                    res.json(user);
+                }
+                if (fieldToBeUpdated === "role") {
+                    //Check body is valid
+                    const name = req.body.name;
+                    if (!name) return  res.status(400).json({Error: "Please specify username"});
+                    const newRole = req.body.newRole;
+                    if (!newRole) return  res.status(400).json({Error: "Please specify new Role"})
+                    
+                    //update role
+                    const user = await User.findOneAndUpdate({userName: name}, {role: newRole}, {new: true});
+                    //console.log("Made it this far");
+                    if (!user) return res.status(404).send("The user with the given username was not found");
+                    
+                    //Return to client
+                    res.json(user);
+                }
             } else return res.status(400).json({Error: "Value for field to be updated is invalid"})
         }
         //Extract and validate body (contains data for user to be updated)
