@@ -4,6 +4,7 @@ const db = require('./config/secrets').mongoUri;
 const helmet = require('helmet');
 const morgan = require('morgan');
 const userRouter = require('./routes/users');
+const authRouter = require('./routes/auth');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(morgan('tiny'));
 
 //Use routes
 app.use('/api/users', userRouter);
+app.use('/api/auth', authRouter);
 
 
 //Listen
