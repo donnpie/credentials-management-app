@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const userRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
+const cors = require('cors');
 
 const app = express();
 
@@ -13,7 +14,12 @@ mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true  })
 .then(() => console.log('MongoDb remote connected...'))
 .catch(err => console.log(err));
 
-//Middleware
+//Cross origin permission
+app.use(cors({
+    origin: ['*','http://localhost:3000', process.env.PORT]
+}));
+
+//Other middleware
 app.use(express.json()); //body parser 
 app.use(helmet()); 
 app.use(morgan('tiny')); 
