@@ -11,16 +11,17 @@ const Auth = () => {
         division: ""
     });
 
-    //Load ou and division data when component loads
+    const [ auth, setAuth ] = useState({});
+
+    //Load authentication data into session storage
     // useEffect(() => {
-    //     const ouList = makeOptions(ous);
-    // }, [])
+    //     sessionStorage.setItem('auth', auth)
+    // }, [auth]);
 
     //when form submits, make call to api to authenticate user
     const handleSubmit = async (e) => {
         e.preventDefault();
         //console.log(e.target.elements.userName.value);
-        //console.log(e.target.elements.ou.value);
         const un = e.target.elements.userName.value;
         const pwd = e.target.elements.password.value;
         const ou = e.target.elements.ou.value;
@@ -44,12 +45,37 @@ const Auth = () => {
             body: JSON.stringify(credentials),
         })
         //.then(response => console.log(response.headers['x-auth-token']))
-        .then(response => response.headers.forEach(console.log))
-        .catch(err => console.log(err));
-        ;
-        // .then(response => response.json())
-        // .then(data => console.log(data))
+        // .then(response => response.headers.forEach(console.log))
         // .catch(err => console.log(err));
+        // ;
+        .then(response => response.json())
+        .then(data => {
+            setAuth(data);
+            // console.log(data);
+            //console.log(auth);
+            //sessionStorage.setItem('auth', auth)
+            sessionStorage.setItem('id', auth._id)
+            sessionStorage.setItem('userName', auth.userName)
+            sessionStorage.setItem('ou', auth.ou)
+            sessionStorage.setItem('division', auth.division)
+            sessionStorage.setItem('role', auth.role)
+            sessionStorage.setItem('token', auth.token)
+            //const cachedAuth = sessionStorage.getItem('auth');
+            // const id = sessionStorage.getItem('id');
+            // const userName = sessionStorage.getItem('userName');
+            // const ou = sessionStorage.getItem('ou');
+            // const division = sessionStorage.getItem('division');
+            // const role = sessionStorage.getItem('role');
+            // const token = sessionStorage.getItem('token');
+            //console.log(cachedAuth._id);
+            // console.log(id);
+            // console.log(userName);
+            // console.log(ou);
+            // console.log(division);
+            // console.log(role);
+            // console.log(token);
+        })
+        .catch(err => console.log(err));
 
         
     }

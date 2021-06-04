@@ -20,10 +20,12 @@ router.post('/', async (req, res) => {
     if (!validPassword) return res.status(400).send('Invalid email or password');
     
     //Return user 
-    const payload = _.pick(user, ['_id', 'userName', 'ou', 'division', 'role'])
+    let payload = _.pick(user, ['_id', 'userName', 'ou', 'division', 'role'])
     const token = jwt.sign(JSON.stringify(payload), jwtPrivateKey, {algorithm: 'HS256'});
-    console.log(token);
-    res.header('x-auth-token', token).json(payload);
+    //console.log(token);
+    payload['token'] = token
+    //res.header('x-auth-token', token).json(payload);
+    res.json(payload)
 })
 
 
