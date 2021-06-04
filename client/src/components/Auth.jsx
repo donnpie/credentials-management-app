@@ -1,6 +1,7 @@
 import React, { useEffect, useState} from 'react';
 import './Auth.css';
 import {ous, divisions} from '../config/default'
+import { Redirect } from 'react-router';
 
 const Auth = () => {
     //Set default state variable
@@ -12,6 +13,8 @@ const Auth = () => {
     });
 
     const [ auth, setAuth ] = useState({});
+
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     //Load authentication data into session storage
     // useEffect(() => {
@@ -74,10 +77,12 @@ const Auth = () => {
             // console.log(division);
             // console.log(role);
             // console.log(token);
-        })
-        .catch(err => console.log(err));
 
-        
+            if (auth.token) {
+                setIsLoggedIn(true);
+            }
+        })
+        .catch(err => console.log(err));        
     }
 
     const makeOptions = (optionsArray) => {
@@ -88,9 +93,9 @@ const Auth = () => {
         return options;
     }
 
-
-
-
+    if (isLoggedIn) {
+        return <Redirect to='/options' />
+    }
     return (
         <div className="wrapper">
             <h1>Sign In</h1>
@@ -121,3 +126,6 @@ const Auth = () => {
 }
 
 export default Auth;
+
+//References:
+//https://www.robinwieruch.de/local-storage-react
