@@ -7,6 +7,7 @@ const ViewAll = () => {
     const { id } = useParams();
     const [user, setUser] = useState([]);
     const [mode, setMode] = useState("initial");
+    const [success, setSuccess] = useState(false);
     
     useEffect(() => {
         // const id = sessionStorage.getItem('id');
@@ -55,7 +56,8 @@ const ViewAll = () => {
     // Handler for changes
     const editName = (e) => {
         e.preventDefault();
-        console.log("editName");
+        //console.log("editName");
+        setSuccess(false);
         setMode("editName")
         //console.log(e);
         // <Redirect
@@ -80,21 +82,25 @@ const ViewAll = () => {
     }
     const editPassword = (e) => {
         e.preventDefault();
+        setSuccess(false);
         setMode("editPassword")
     }
 
     const editOu = (e) => {
         e.preventDefault();
+        setSuccess(false);
         setMode("editOu")
     }
 
     const editDivision = (e) => {
         e.preventDefault();
+        setSuccess(false);
         setMode("editDivision")
     }
 
     const editRole = (e) => {
         e.preventDefault();
+        setSuccess(false);
         setMode("editRole")
     }
 
@@ -115,44 +121,250 @@ const ViewAll = () => {
     const showChangeNameForm = (user, mode) => {
         if (mode==="editName") {
             return (
-                <p>Edit name</p>
+                <form onSubmit={onChangeName}>
+                    <label htmlFor="oldName">Old user name</label>
+                    <input type="text" name="oldName" value={user.userName} disabled={true}/>
+                    
+                    <label htmlFor="newName">New User Name</label>
+                    <input type="text" name="newName" placeholder="Type new user name here"/>
+                    
+                    <label htmlFor="ou">OU</label>
+                    <input type="text" name="ou" value={user.ou} disabled={true}/>
+                    
+                    <label htmlFor="division">Division</label>
+                    <input type="text" name="division" value={user.division} disabled={true}/>
+
+                    <button type="submit">Update</button>
+                </form>
             )
         }
+    }
+
+    const onChangeName = (e) => {
+        e.preventDefault();
+        //console.log(e.target.elements.oldName.value);
+        const token = sessionStorage.getItem('token');
+        const fieldToBeUpdated = "userName";
+        const oldName = e.target.elements.oldName.value
+        const newName = e.target.elements.newName.value
+        const ou = e.target.elements.ou.value
+        const division = e.target.elements.division.value
+        // console.log(fieldToBeUpdated);
+        // console.log(oldName);
+        // console.log(newName);
+        // console.log(ou);
+        // console.log(division);
+
+        //Send request to API to change name
+        let myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", "Bearer " + token);
+
+        let raw = JSON.stringify({
+            "fieldToBeUpdated": fieldToBeUpdated,
+            "oldName": oldName,
+            "newName": newName,
+            "ou": ou,
+            "division": division
+        });
+
+        const requestOptions = {
+            method: 'PUT',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        fetch("http://localhost:5000/api/users", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+            //console.log(result);
+            setSuccess(true);
+        })
+        .catch(error => console.log('error', error));
     }
 
     const showChangePasswordForm = (user, mode) => {
         if (mode==="editPassword") {
             return (
-                <p>Edit password</p>
+                <form onSubmit={onChangePassword}>
+                    <label htmlFor="name">Old user name</label>
+                    <input type="text" name="name" value={user.userName} disabled={true}/>
+                    
+                    <label htmlFor="newPassword">New Password</label>
+                    <input type="text" name="newPassword" placeholder="Type new password here"/>
+                    
+                    <label htmlFor="ou">OU</label>
+                    <input type="text" name="ou" value={user.ou} disabled={true}/>
+                    
+                    <label htmlFor="division">Division</label>
+                    <input type="text" name="division" value={user.division} disabled={true}/>
+
+                    <button type="submit">Update</button>
+                </form>
             )
         }
     }
 
-    const showChangeOuForm = (user, mode) => {
-        if (mode==="editOu") {
-            return (
-                <p>Edit ou</p>
-            )
-        }
+    const onChangePassword = (e) => {
+        e.preventDefault();
+        //console.log(e.target.elements.oldName.value);
+        const fieldToBeUpdated = "password";
+        const name = e.target.elements.name.value
+        const newPassword = e.target.elements.newPassword.value
+        const ou = e.target.elements.ou.value
+        const division = e.target.elements.division.value
+        
+        let myBody = JSON.stringify({
+            "fieldToBeUpdated": fieldToBeUpdated,
+            "name": name,
+            "newPassword": newPassword,
+            "ou": ou,
+            "division": division
+        });
+        
+        //Send request to API
+        const token = sessionStorage.getItem('token');
+        let myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", "Bearer " + token);
+
+
+        const requestOptions = {
+            method: 'PUT',
+            headers: myHeaders,
+            body: myBody,
+            redirect: 'follow'
+        };
+
+        fetch("http://localhost:5000/api/users", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+            //console.log(result);
+            setSuccess(true);
+        })
+        .catch(error => console.log('error', error));
     }
 
-    const showChangeDivisionForm = (user, mode) => {
-        if (mode==="editDivision") {
-            return (
-                <p>Edit division</p>
-            )
-        }
-    }
+    // const update = async (uri, body) => {
+    //     const token = sessionStorage.getItem('token');
+    //     let myHeaders = new Headers();
+    //     myHeaders.append("Content-Type", "application/json");
+    //     myHeaders.append("Authorization", "Bearer " + token);
 
-    const showChangeRoleForm = (user, mode) => {
-        if (mode==="editRole") {
-            return (
-                <p>Edit role</p>
-            )
-        }
-    }
+    //     const requestOptions = {
+    //         method: 'PUT',
+    //         headers: myHeaders,
+    //         body: body,
+    //         redirect: 'follow'
+    //     };
+
+    //     fetch(uri, requestOptions)
+    //     .then(response => response.json())
+    //     .then(result => {
+    //         //console.log(result);
+    //         setSuccess(true);
+    //     })
+    //     .catch(error => console.log('error', error));
+    // }
+
+    // const showChangeOuForm = (user, mode) => {
+    //     if (mode==="editOu") {
+    //         return (
+    //             <form onSubmit={onChangeOu}>
+    //                 <label htmlFor="name">Old user name</label>
+    //                 <input type="text" name="name" value={user.userName} disabled={true}/>
+                    
+    //                 <label htmlFor="ou">OU</label>
+    //                 <input type="text" name="ou" value={user.ou} disabled={true}/>
+                    
+    //                 <label htmlFor="newOu">New OU</label>
+    //                 <input type="text" name="newOu" placeholder="Type new OU here"/>
+                    
+    //                 <label htmlFor="division">Division</label>
+    //                 <input type="text" name="division" value={user.division} disabled={true}/>
+
+    //                 <button type="submit">Update</button>
+    //             </form>
+    //         )
+    //     }
+    // }
+
+    // const showChangeDivisionForm = (user, mode) => {
+    //     if (mode==="editDivision") {
+    //         return (
+    //             <form onSubmit={onChangeDivision}>
+    //                 <label htmlFor="name">Old user name</label>
+    //                 <input type="text" name="name" value={user.userName} disabled={true}/>
+                    
+    //                 <label htmlFor="ou">OU</label>
+    //                 <input type="text" name="ou" value={user.ou} disabled={true}/>
+                    
+    //                 <label htmlFor="division">Division</label>
+    //                 <input type="text" name="division" value={user.division} disabled={true}/>
+
+    //                 <label htmlFor="newDivision">New Division</label>
+    //                 <input type="text" name="newDivision" placeholder="Type new Division here"/>
+                    
+    //                 <button type="submit">Update</button>
+    //             </form>
+    //         )
+    //     }
+    // }
+
+    // const showChangeRoleForm = (user, mode) => {
+    //     if (mode==="editRole") {
+    //         return (
+    //             <form onSubmit={onChangeRole}>
+    //                 <label htmlFor="name">Old user name</label>
+    //                 <input type="text" name="name" value={user.userName} disabled={true}/>
+                    
+    //                 <label htmlFor="ou">OU</label>
+    //                 <input type="text" name="ou" value={user.ou} disabled={true}/>
+                    
+    //                 <label htmlFor="division">Division</label>
+    //                 <input type="text" name="division" value={user.division} disabled={true}/>
+
+    //                 <label htmlFor="newRole">New Role</label>
+    //                 <input type="text" name="newRole" placeholder="Type new Role here"/>
+                    
+    //                 <button type="submit">Update</button>
+    //             </form>
+    //         )
+    //     }
+    // }
+
     const goBack = () => {
         setMode("initial")
+    }
+
+    const showFeedbackMessage = (mode, success) => {
+        let message;
+        switch (mode) {
+            case "editName":
+                message = "User Name changed sucessfully";
+                break;
+            case "editPassword":
+                message = "Password changed sucessfully";
+                break;
+            case "editOu":
+                message = "OU changed sucessfully";
+                break;
+            case "editDivision":
+                message = "Division changed sucessfully";
+                break;
+            case "editRole":
+                message = "Role changed sucessfully";
+                break;
+            default:
+                message = "Error: No update was made";
+                break;
+        }
+        console.log('mode', mode);
+        console.log('success', success);
+        return (
+            <p>{success && message}</p>
+        );
     }
 
     return (
@@ -160,9 +372,10 @@ const ViewAll = () => {
             {showUserDetails(user, mode)}
             {showChangeNameForm(user, mode)}
             {showChangePasswordForm(user, mode)}
-            {showChangeOuForm(user, mode)}
+            {/* {showChangeOuForm(user, mode)}
             {showChangeDivisionForm(user, mode)}
-            {showChangeRoleForm(user, mode)}
+            {showChangeRoleForm(user, mode)} */}
+            {showFeedbackMessage(mode, success)}
             {/* Pass props down to edit user */}
             {/* <ul>
                 <li><a href="/edit/name">Edit User Name (Requires  Management role)</a></li>
