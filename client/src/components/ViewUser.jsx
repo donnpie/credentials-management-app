@@ -8,77 +8,34 @@ const ViewAll = () => {
     const [user, setUser] = useState([]);
     const [mode, setMode] = useState("initial");
     const [success, setSuccess] = useState(false);
+    const uri = "http://localhost:5000/api/users";
     
     useEffect(() => {
-        // const id = sessionStorage.getItem('id');
-        // const userName = sessionStorage.getItem('userName');
-        // const ou = sessionStorage.getItem('ou');
-        // const division = sessionStorage.getItem('division');
-        // const role = sessionStorage.getItem('role');
         const token = sessionStorage.getItem('token');
-
-
-        // console.log(id);
-        // console.log(userName);
-        // console.log(ou);
-        // console.log(division);
-        // console.log(role);
-        // console.log(token);
 
         //Authenticate user
         var myHeaders = new Headers();
         myHeaders.append("Authorization", "Bearer " + token);
-        //myHeaders.append("Content-Type", "text/plain");
-
-        //var raw = "{\r\n    \"name\":\"\"\r\n}";
 
         var requestOptions = {
-        method: 'GET',
-        headers: myHeaders,
-        //body: raw,
-        redirect: 'follow'
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow'
         };
 
         fetch("http://localhost:5000/api/users/" + id, requestOptions)
         .then(response => response.json())
         .then(result => {
-            //console.log('result', result);
             setUser(result);
-            //console.log('user', user);
         })
         .catch(error => console.log('error', error));
-
-        //Get list of users -> put in state
-
-        //Map users to html
     }, []);
 
-    // Handler for changes
+    // Handlers for change buttons
     const editName = (e) => {
         e.preventDefault();
-        //console.log("editName");
         setSuccess(false);
         setMode("editName")
-        //console.log(e);
-        // <Redirect
-        // to={
-        //     {
-        //         pathname: "/edit/name",
-        //         state: { 
-        //             fieldToBeUpdated: "userName",
-        //             oldName: user.userName,
-        //             ou: user.ou,
-        //             division: user.division   
-        //         }
-        //     }
-        // }
-        // />
-        // return (<Redirect
-        // to="/edit/name"
-        // />)
-        // return (<Test
-        //     fieldToBeUpdated="userName"
-        // />)
     }
     const editPassword = (e) => {
         e.preventDefault();
@@ -104,6 +61,7 @@ const ViewAll = () => {
         setMode("editRole")
     }
 
+    //Render methods for forms and their event handlers
     const showUserDetails = (user, mode) => {
         if (mode==="initial") {
             return (
@@ -142,20 +100,14 @@ const ViewAll = () => {
 
     const onChangeName = (e) => {
         e.preventDefault();
-        //console.log(e.target.elements.oldName.value);
-        const token = sessionStorage.getItem('token');
         const fieldToBeUpdated = "userName";
         const oldName = e.target.elements.oldName.value
         const newName = e.target.elements.newName.value
         const ou = e.target.elements.ou.value
         const division = e.target.elements.division.value
-        // console.log(fieldToBeUpdated);
-        // console.log(oldName);
-        // console.log(newName);
-        // console.log(ou);
-        // console.log(division);
-
+        
         //Send request to API to change name
+        const token = sessionStorage.getItem('token');
         let myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("Authorization", "Bearer " + token);
@@ -178,7 +130,6 @@ const ViewAll = () => {
         fetch("http://localhost:5000/api/users", requestOptions)
         .then(response => response.json())
         .then(result => {
-            //console.log(result);
             setSuccess(true);
         })
         .catch(error => console.log('error', error));
@@ -188,7 +139,7 @@ const ViewAll = () => {
         if (mode==="editPassword") {
             return (
                 <form onSubmit={onChangePassword}>
-                    <label htmlFor="name">Old user name</label>
+                    <label htmlFor="name">User name</label>
                     <input type="text" name="name" value={user.userName} disabled={true}/>
                     
                     <label htmlFor="newPassword">New Password</label>
@@ -208,7 +159,6 @@ const ViewAll = () => {
 
     const onChangePassword = (e) => {
         e.preventDefault();
-        //console.log(e.target.elements.oldName.value);
         const fieldToBeUpdated = "password";
         const name = e.target.elements.name.value
         const newPassword = e.target.elements.newPassword.value
@@ -224,49 +174,29 @@ const ViewAll = () => {
         });
         
         //Send request to API
+        update(uri, myBody);
+    }
+
+    const update = async (uri, body) => {
         const token = sessionStorage.getItem('token');
         let myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("Authorization", "Bearer " + token);
 
-
         const requestOptions = {
             method: 'PUT',
             headers: myHeaders,
-            body: myBody,
+            body: body,
             redirect: 'follow'
         };
 
-        fetch("http://localhost:5000/api/users", requestOptions)
+        await fetch(uri, requestOptions)
         .then(response => response.json())
         .then(result => {
-            //console.log(result);
             setSuccess(true);
         })
         .catch(error => console.log('error', error));
     }
-
-    // const update = async (uri, body) => {
-    //     const token = sessionStorage.getItem('token');
-    //     let myHeaders = new Headers();
-    //     myHeaders.append("Content-Type", "application/json");
-    //     myHeaders.append("Authorization", "Bearer " + token);
-
-    //     const requestOptions = {
-    //         method: 'PUT',
-    //         headers: myHeaders,
-    //         body: body,
-    //         redirect: 'follow'
-    //     };
-
-    //     fetch(uri, requestOptions)
-    //     .then(response => response.json())
-    //     .then(result => {
-    //         //console.log(result);
-    //         setSuccess(true);
-    //     })
-    //     .catch(error => console.log('error', error));
-    // }
 
     // const showChangeOuForm = (user, mode) => {
     //     if (mode==="editOu") {
@@ -360,8 +290,6 @@ const ViewAll = () => {
                 message = "Error: No update was made";
                 break;
         }
-        console.log('mode', mode);
-        console.log('success', success);
         return (
             <p>{success && message}</p>
         );
