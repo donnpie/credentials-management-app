@@ -1,6 +1,6 @@
 import React, { useEffect, useState} from 'react';
-import { Redirect, useParams } from 'react-router-dom';
-import Test from './Test';
+import { useParams } from 'react-router-dom';
+import './ViewUser.css';
 
 
 const ViewAll = () => {
@@ -65,7 +65,7 @@ const ViewAll = () => {
     const showUserDetails = (user, mode) => {
         if (mode==="initial") {
             return (
-                <ul>
+                <ul className="user-list">
                     <li>Id: {user._id}</li>
                     <li>User name: {user.userName}</li>
                     <li>Role: {user.role}</li>
@@ -177,6 +177,132 @@ const ViewAll = () => {
         update(uri, myBody);
     }
 
+    const showChangeOuForm = (user, mode) => {
+        if (mode==="editOu") {
+            return (
+                <form onSubmit={onChangeOu}>
+                    <label htmlFor="name">User name</label>
+                    <input type="text" name="name" value={user.userName} disabled={true}/>
+                    
+                    <label htmlFor="ou">OU</label>
+                    <input type="text" name="ou" value={user.ou} disabled={true}/>
+                    
+                    <label htmlFor="newOu">New OU</label>
+                    <input type="text" name="newOu" placeholder="Type new OU here"/>
+                    
+                    <label htmlFor="division">Division</label>
+                    <input type="text" name="division" value={user.division} disabled={true}/>
+
+                    <button type="submit">Update</button>
+                </form>
+            )
+        }
+    }
+
+    const onChangeOu = (e) => {
+        e.preventDefault();
+        const fieldToBeUpdated = "ou";
+        const name = e.target.elements.name.value
+        const ou = e.target.elements.ou.value
+        const newOu = e.target.elements.newOu.value
+        const division = e.target.elements.division.value
+        
+        let myBody = JSON.stringify({
+            "fieldToBeUpdated": fieldToBeUpdated,
+            "name": name,
+            "ou": ou,
+            "newOu": newOu,
+            "division": division
+        });
+        
+        //Send request to API
+        update(uri, myBody);
+    }
+
+    const showChangeDivisionForm = (user, mode) => {
+        if (mode==="editDivision") {
+            return (
+                <form onSubmit={onChangeDivision}>
+                    <label htmlFor="name">User name</label>
+                    <input type="text" name="name" value={user.userName} disabled={true}/>
+                    
+                    <label htmlFor="ou">OU</label>
+                    <input type="text" name="ou" value={user.ou} disabled={true}/>
+                    
+                    <label htmlFor="division">Division</label>
+                    <input type="text" name="division" value={user.division} disabled={true}/>
+
+                    <label htmlFor="newDivision">New Division</label>
+                    <input type="text" name="newDivision" placeholder="Type new Division here"/>
+                    
+                    <button type="submit">Update</button>
+                </form>
+            )
+        }
+    }
+
+    const onChangeDivision = (e) => {
+        e.preventDefault();
+        const fieldToBeUpdated = "division";
+        const name = e.target.elements.name.value
+        const ou = e.target.elements.ou.value
+        const division = e.target.elements.division.value
+        const newDivision = e.target.elements.newDivision.value
+        
+        let myBody = JSON.stringify({
+            "fieldToBeUpdated": fieldToBeUpdated,
+            "name": name,
+            "ou": ou,
+            "division": division,
+            "newDivision": newDivision
+        });
+        
+        //Send request to API
+        update(uri, myBody);
+    }
+
+    const showChangeRoleForm = (user, mode) => {
+        if (mode==="editRole") {
+            return (
+                <form onSubmit={onChangeRole}>
+                    <label htmlFor="name">User name</label>
+                    <input type="text" name="name" value={user.userName} disabled={true}/>
+                    
+                    <label htmlFor="ou">OU</label>
+                    <input type="text" name="ou" value={user.ou} disabled={true}/>
+                    
+                    <label htmlFor="division">Division</label>
+                    <input type="text" name="division" value={user.division} disabled={true}/>
+
+                    <label htmlFor="newRole">New Role</label>
+                    <input type="text" name="newRole" placeholder="Type new Role here"/>
+                    
+                    <button type="submit">Update</button>
+                </form>
+            )
+        }
+    }
+
+    const onChangeRole = (e) => {
+        e.preventDefault();
+        const fieldToBeUpdated = "role";
+        const name = e.target.elements.name.value
+        const ou = e.target.elements.ou.value
+        const division = e.target.elements.division.value
+        const newRole = e.target.elements.newRole.value
+        
+        let myBody = JSON.stringify({
+            "fieldToBeUpdated": fieldToBeUpdated,
+            "name": name,
+            "ou": ou,
+            "division": division,
+            "newRole": newRole
+        });
+        
+        //Send request to API
+        update(uri, myBody);
+    }
+    
     const update = async (uri, body) => {
         const token = sessionStorage.getItem('token');
         let myHeaders = new Headers();
@@ -197,72 +323,6 @@ const ViewAll = () => {
         })
         .catch(error => console.log('error', error));
     }
-
-    // const showChangeOuForm = (user, mode) => {
-    //     if (mode==="editOu") {
-    //         return (
-    //             <form onSubmit={onChangeOu}>
-    //                 <label htmlFor="name">Old user name</label>
-    //                 <input type="text" name="name" value={user.userName} disabled={true}/>
-                    
-    //                 <label htmlFor="ou">OU</label>
-    //                 <input type="text" name="ou" value={user.ou} disabled={true}/>
-                    
-    //                 <label htmlFor="newOu">New OU</label>
-    //                 <input type="text" name="newOu" placeholder="Type new OU here"/>
-                    
-    //                 <label htmlFor="division">Division</label>
-    //                 <input type="text" name="division" value={user.division} disabled={true}/>
-
-    //                 <button type="submit">Update</button>
-    //             </form>
-    //         )
-    //     }
-    // }
-
-    // const showChangeDivisionForm = (user, mode) => {
-    //     if (mode==="editDivision") {
-    //         return (
-    //             <form onSubmit={onChangeDivision}>
-    //                 <label htmlFor="name">Old user name</label>
-    //                 <input type="text" name="name" value={user.userName} disabled={true}/>
-                    
-    //                 <label htmlFor="ou">OU</label>
-    //                 <input type="text" name="ou" value={user.ou} disabled={true}/>
-                    
-    //                 <label htmlFor="division">Division</label>
-    //                 <input type="text" name="division" value={user.division} disabled={true}/>
-
-    //                 <label htmlFor="newDivision">New Division</label>
-    //                 <input type="text" name="newDivision" placeholder="Type new Division here"/>
-                    
-    //                 <button type="submit">Update</button>
-    //             </form>
-    //         )
-    //     }
-    // }
-
-    // const showChangeRoleForm = (user, mode) => {
-    //     if (mode==="editRole") {
-    //         return (
-    //             <form onSubmit={onChangeRole}>
-    //                 <label htmlFor="name">Old user name</label>
-    //                 <input type="text" name="name" value={user.userName} disabled={true}/>
-                    
-    //                 <label htmlFor="ou">OU</label>
-    //                 <input type="text" name="ou" value={user.ou} disabled={true}/>
-                    
-    //                 <label htmlFor="division">Division</label>
-    //                 <input type="text" name="division" value={user.division} disabled={true}/>
-
-    //                 <label htmlFor="newRole">New Role</label>
-    //                 <input type="text" name="newRole" placeholder="Type new Role here"/>
-                    
-    //                 <button type="submit">Update</button>
-    //             </form>
-    //         )
-    //     }
-    // }
 
     const goBack = () => {
         setMode("initial")
@@ -300,24 +360,18 @@ const ViewAll = () => {
             {showUserDetails(user, mode)}
             {showChangeNameForm(user, mode)}
             {showChangePasswordForm(user, mode)}
-            {/* {showChangeOuForm(user, mode)}
+            {showChangeOuForm(user, mode)}
             {showChangeDivisionForm(user, mode)}
-            {showChangeRoleForm(user, mode)} */}
+            {showChangeRoleForm(user, mode)}
             {showFeedbackMessage(mode, success)}
-            {/* Pass props down to edit user */}
-            {/* <ul>
-                <li><a href="/edit/name">Edit User Name (Requires  Management role)</a></li>
-                <li><a href="/edit/password">Edit password (Requires  Management role)</a></li>
-                <li><a href="/edit/ou">Edit OU (Requires  Admin role)</a></li>
-                <li><a href="/edit/division">Edit Division (Requires  Admin role)</a></li>
-                <li><a href="/edit/role">Edit Role (Requires  Admin role)</a></li>
-            </ul> */}
-            <button onClick={editName}>Edit User Name</button>
-            <button onClick={editPassword}>Edit password</button>
-            <button onClick={editOu}>Edit OU</button>
-            <button onClick={editDivision}>Edit Division</button>
-            <button onClick={editRole}>Edit Role</button>
-            <button onClick={goBack}>Back to user details</button>
+            <div className="button-wrapper">
+                <button className="user-button" onClick={editName}>Edit User Name</button>
+                <button className="user-button" onClick={editPassword}>Edit password</button>
+                <button className="user-button" onClick={editOu}>Edit OU</button>
+                <button className="user-button" onClick={editDivision}>Edit Division</button>
+                <button className="user-button" onClick={editRole}>Edit Role</button>
+                <button className="user-button" onClick={goBack}>Back to user details</button>
+            </div>
         </>
     )
 }

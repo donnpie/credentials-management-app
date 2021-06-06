@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from 'react';
+import React, { useState} from 'react';
 import './Auth.css';
 import {ous, divisions} from '../config/default'
 import { Redirect } from 'react-router';
