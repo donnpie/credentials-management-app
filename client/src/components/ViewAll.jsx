@@ -1,4 +1,5 @@
 import React, { useEffect, useState} from 'react';
+import './ViewAll.css'
 
 const ViewAll = () => {
     const [users, setUsers] = useState([]);
@@ -68,20 +69,22 @@ const ViewAll = () => {
     }
 
     return (
-        <table>
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>User name</th>
-                    <th>Role</th>
-                    <th>OU</th>
-                    <th>Division</th>
-                </tr>
-            </thead>
-            <tbody>
-                {mapUsers(users)}
-            </tbody>
-        </table>
+        <div className="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>User name</th>
+                        <th>Role</th>
+                        <th>OU</th>
+                        <th>Division</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {mapUsers(users)}
+                </tbody>
+            </table>
+        </div>
     )
 }
 

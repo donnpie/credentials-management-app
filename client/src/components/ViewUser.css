@@ -31,3 +31,13 @@ body{
 .user-button:hover{
     cursor: pointer;
 }
+
+.form-layout{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap:10px;
+}
+
+.form-layout> *:last-child{
+    grid-column: 1 / span 2;
+}

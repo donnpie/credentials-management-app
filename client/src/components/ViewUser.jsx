@@ -79,7 +79,7 @@ const ViewAll = () => {
     const showChangeNameForm = (user, mode) => {
         if (mode==="editName") {
             return (
-                <form onSubmit={onChangeName}>
+                <form onSubmit={onChangeName} className="form-layout">
                     <label htmlFor="oldName">Old user name</label>
                     <input type="text" name="oldName" value={user.userName} disabled={true}/>
                     
@@ -92,7 +92,7 @@ const ViewAll = () => {
                     <label htmlFor="division">Division</label>
                     <input type="text" name="division" value={user.division} disabled={true}/>
 
-                    <button type="submit">Update</button>
+                    <button className="user-button" type="submit">Update</button>
                 </form>
             )
         }
@@ -138,7 +138,7 @@ const ViewAll = () => {
     const showChangePasswordForm = (user, mode) => {
         if (mode==="editPassword") {
             return (
-                <form onSubmit={onChangePassword}>
+                <form onSubmit={onChangePassword} className="form-layout">
                     <label htmlFor="name">User name</label>
                     <input type="text" name="name" value={user.userName} disabled={true}/>
                     
@@ -151,7 +151,7 @@ const ViewAll = () => {
                     <label htmlFor="division">Division</label>
                     <input type="text" name="division" value={user.division} disabled={true}/>
 
-                    <button type="submit">Update</button>
+                    <button className="user-button" type="submit">Update</button>
                 </form>
             )
         }
@@ -180,7 +180,7 @@ const ViewAll = () => {
     const showChangeOuForm = (user, mode) => {
         if (mode==="editOu") {
             return (
-                <form onSubmit={onChangeOu}>
+                <form onSubmit={onChangeOu} className="form-layout">
                     <label htmlFor="name">User name</label>
                     <input type="text" name="name" value={user.userName} disabled={true}/>
                     
@@ -193,7 +193,7 @@ const ViewAll = () => {
                     <label htmlFor="division">Division</label>
                     <input type="text" name="division" value={user.division} disabled={true}/>
 
-                    <button type="submit">Update</button>
+                    <button className="user-button" type="submit">Update</button>
                 </form>
             )
         }
@@ -222,7 +222,7 @@ const ViewAll = () => {
     const showChangeDivisionForm = (user, mode) => {
         if (mode==="editDivision") {
             return (
-                <form onSubmit={onChangeDivision}>
+                <form onSubmit={onChangeDivision} className="form-layout">
                     <label htmlFor="name">User name</label>
                     <input type="text" name="name" value={user.userName} disabled={true}/>
                     
@@ -235,7 +235,7 @@ const ViewAll = () => {
                     <label htmlFor="newDivision">New Division</label>
                     <input type="text" name="newDivision" placeholder="Type new Division here"/>
                     
-                    <button type="submit">Update</button>
+                    <button className="user-button" type="submit">Update</button>
                 </form>
             )
         }
@@ -264,7 +264,7 @@ const ViewAll = () => {
     const showChangeRoleForm = (user, mode) => {
         if (mode==="editRole") {
             return (
-                <form onSubmit={onChangeRole}>
+                <form onSubmit={onChangeRole} className="form-layout">
                     <label htmlFor="name">User name</label>
                     <input type="text" name="name" value={user.userName} disabled={true}/>
                     
@@ -277,7 +277,7 @@ const ViewAll = () => {
                     <label htmlFor="newRole">New Role</label>
                     <input type="text" name="newRole" placeholder="Type new Role here"/>
                     
-                    <button type="submit">Update</button>
+                    <button className="user-button" type="submit">Update</button>
                 </form>
             )
         }
